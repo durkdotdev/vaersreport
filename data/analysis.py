@@ -5,11 +5,23 @@ from utils import *
 
 def analysis_year_keys_and_analysis(year):
     return {
-      "totals": {"analysis": analyze_totals, "args": [year], "key": f"{year}:totals"},
-      "totals_monthly": {"analysis": analyze_totals_monthly, "args": [year], "key": f"{year}:totals:monthly"},
-      "growth": {"analysis": analyze_growth, "args": [year], "key": f"{year}:growth"},
-      "outcomes": {"analysis": analyze_outcomes, "args": [year], "key": f"{year}:outcomes"},
-      "vaccines": {"analysis": analyze_vaccines, "args": [year], "key":f"{year}:vaccines"}
+        "totals": {"analysis": analyze_totals, "args": [year], "key": f"{year}:totals"},
+        "totals_monthly": {
+            "analysis": analyze_totals_monthly,
+            "args": [year],
+            "key": f"{year}:totals:monthly",
+        },
+        "growth": {"analysis": analyze_growth, "args": [year], "key": f"{year}:growth"},
+        "outcomes": {
+            "analysis": analyze_outcomes,
+            "args": [year],
+            "key": f"{year}:outcomes",
+        },
+        "vaccines": {
+            "analysis": analyze_vaccines,
+            "args": [year],
+            "key": f"{year}:vaccines",
+        },
     }
 
 
@@ -21,11 +33,11 @@ def analyze_totals(year):
     nd_total = len(nd_df)
     total = d_total + nd_total
     return {
-      "abbreviation": f"'{year[-2:]}",
-      "year": year,
-      "d_total": d_total,
-      "nd_total": nd_total,
-      "total": total
+        "abbreviation": f"'{year[-2:]}",
+        "year": year,
+        "d_total": d_total,
+        "nd_total": nd_total,
+        "total": total,
     }
 
 
@@ -34,8 +46,20 @@ def analyze_totals_monthly(year):
     nd_df = get_data(year, "DATA", True)
     totals = []
     for index, month in enumerate(months):
-        d_total = len(d_df[d_df["RECVDATE"].str[:2].eq(str(index) if index > 9 else f"0{str(index)}")])
-        nd_total = len(nd_df[nd_df["RECVDATE"].str[:2].eq(str(index) if index > 9 else f"0{str(index)}")])
+        d_total = len(
+            d_df[
+                d_df["RECVDATE"]
+                .str[:2]
+                .eq(str(index) if index > 9 else f"0{str(index)}")
+            ]
+        )
+        nd_total = len(
+            nd_df[
+                nd_df["RECVDATE"]
+                .str[:2]
+                .eq(str(index) if index > 9 else f"0{str(index)}")
+            ]
+        )
         total = d_total + nd_total
         totals.append(
             {
@@ -55,16 +79,23 @@ def analyze_growth(year):
     nd_growth = 0
     total_growth = 0
     if index != 0:
-      past_total = redis_get(analysis_year_keys_and_analysis(years[index -1])["totals"]["key"])
-      present_total = redis_get(analysis_year_keys_and_analysis(years[index])["totals"]["key"])
-      d_growth = 100 * ((present_total["d_total"] - past_total["d_total"]) / past_total["d_total"])
-      nd_growth = 100 * ((present_total["nd_total"] - past_total["nd_total"]) / past_total["nd_total"])
-      total_growth = 100 * ((present_total["total"] - past_total["total"]) / past_total["total"])
-    return {
-      "d_growth": d_growth,
-      "nd_growth": nd_growth,
-      "total_growth": total_growth
-    }
+        past_total = redis_get(
+            analysis_year_keys_and_analysis(years[index - 1])["totals"]["key"]
+        )
+        present_total = redis_get(
+            analysis_year_keys_and_analysis(years[index])["totals"]["key"]
+        )
+        d_growth = 100 * (
+            (present_total["d_total"] - past_total["d_total"]) / past_total["d_total"]
+        )
+        nd_growth = 100 * (
+            (present_total["nd_total"] - past_total["nd_total"])
+            / past_total["nd_total"]
+        )
+        total_growth = 100 * (
+            (present_total["total"] - past_total["total"]) / past_total["total"]
+        )
+    return {"d_growth": d_growth, "nd_growth": nd_growth, "total_growth": total_growth}
 
 
 # Outcomes
@@ -78,12 +109,12 @@ def analyze_outcomes(year):
     nd_injuries = len(nd_df) - nd_deaths
     total_injuries = d_injuries + nd_injuries
     return {
-      "d_deaths": d_deaths,
-      "nd_deaths": nd_deaths,
-      "total_deaths": total_deaths,
-      "d_injuries": d_injuries,
-      "nd_injuries": nd_injuries,
-      "total_injuries": total_injuries
+        "d_deaths": d_deaths,
+        "nd_deaths": nd_deaths,
+        "total_deaths": total_deaths,
+        "d_injuries": d_injuries,
+        "nd_injuries": nd_injuries,
+        "total_injuries": total_injuries,
     }
 
 
@@ -100,11 +131,11 @@ def analyze_vaccines(year):
         nd_total = len(nd_df[nd_df["VAX_TYPE"].eq(vaccine)])
         total = d_total + nd_total
         vaccines.append(
-          {
-            "vax_type": vaccine,
-            "d_total": d_total,
-            "nd_total": nd_total,
-            "total": total
-          }
+            {
+                "vax_type": vaccine,
+                "d_total": d_total,
+                "nd_total": nd_total,
+                "total": total,
+            }
         )
     return vaccines

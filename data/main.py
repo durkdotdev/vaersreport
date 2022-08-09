@@ -49,8 +49,14 @@ def main(allyears):
         analysis_keys = analysis_year_keys_and_analysis(year)
         keys = analysis_keys.keys()
         for key in keys:
-          value = redis_search(analysis_keys[key]["key"], analysis_keys[key]["analysis"], *analysis_keys[key]["args"], delete=True, log=True)
-          year_analysis[key] = value
+            value = redis_search(
+                analysis_keys[key]["key"],
+                analysis_keys[key]["analysis"],
+                *analysis_keys[key]["args"],
+                delete=True,
+                log=True
+            )
+            year_analysis[key] = value
         analysis[year] = year_analysis
 
     print("Saving analysis to data.json")

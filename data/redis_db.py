@@ -9,19 +9,18 @@ r = redis.Redis(host="localhost", port=6379)
 
 def redis_search(key, calculation, *args, delete=False, log=False):
     if log:
-      print(f"Calculating {key}...")
+        print(f"Calculating {key}...")
 
     if delete:
         r.delete(key)
 
     potential = r.get(key)
-    if (potential):
+    if potential:
         return json.loads(zlib.decompress(potential))
     else:
         value = calculation(*args)
         r.set(key, zlib.compress(json.dumps(value).encode("utf-8")))
         return value
-
 
 
 def redis_get(key):

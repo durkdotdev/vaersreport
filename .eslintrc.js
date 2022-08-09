@@ -6,6 +6,6 @@ module.exports = {
     "react/jsx-key": "off",
     "simple-import-sort/imports": "error",
     "tailwindcss/no-custom-classname": "off",
-    "unused-imports/no-unused-imports": "error",
-  },
+    "unused-imports/no-unused-imports": "error"
+  }
 };

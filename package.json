@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint --fix",
-    "format": "prettier --write \"**/*.{json,js,ts,jsx,tsx}\" && yarn lint && python -m black",
+    "format": "prettier --write \"**/*.{json,js,ts,jsx,tsx}\" && yarn lint && python -m black ./data",
     "data": "cd data && python main.py",
     "data-allyears": "cd data && python main.py -allyears",
     "pip-install": "cd data && pip install -r requirements.txt",

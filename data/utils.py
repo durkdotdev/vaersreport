@@ -1,7 +1,7 @@
 from datetime import date
 
 
-datasets = ['DATA', 'SYMPTOMS', 'VAX']
+datasets = ["DATA", "SYMPTOMS", "VAX"]
 months = [
     {"abbreviation": "Jan.", "name": "January"},
     {"abbreviation": "Feb.", "name": "February"},
