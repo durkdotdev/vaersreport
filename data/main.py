@@ -7,40 +7,43 @@ import pandas as pd
 import sys
 
 
-def main(allyears):
+def main(all_years=False, read_data=True):
     print("Checking for local redis...")
     test_redis()
 
-    years_to_analyze = years if allyears else [years[-1]]
+    years_to_analyze = years if all_years else [years[-1]]
 
-    print("Splitting Nondomestic data into yearly csvs...")
-    # for dataset in datasets:
-    #     df = pd.read_csv(
-    #         f"./csv/NonDomesticVAERS{dataset}.csv", encoding="latin1", engine="python"
-    #     )
-    #     for year in years_to_analyze:
-    #         print(f"Generating {get_data_filename(year, dataset, True)}.csv...")
-    #         if dataset == "DATA":
-    #             year_df = df[df["RECVDATE"].str.contains(year)]
-    #         else:
-    #             data_df = get_data(year, "DATA", True)
-    #             vaers_ids = data_df["VAERS_ID"].to_list()
-    #             year_df = df[df["VAERS_ID"].isin(vaers_ids)].drop_duplicates(
-    #                 subset=["VAERS_ID"], keep="first"
-    #             )
-    #         year_df.to_csv(
-    #             f"./csv/{get_data_filename(year, dataset, True)}.csv",
-    #             encoding="latin1",
-    #             index=False,
-    #         )
+    if read_data:
+        print("Splitting Nondomestic data into yearly csvs...")
+        for dataset in datasets:
+            df = pd.read_csv(
+                f"./csv/NonDomesticVAERS{dataset}.csv",
+                encoding="latin1",
+                engine="python",
+            )
+            for year in years_to_analyze:
+                print(f"Generating {get_data_filename(year, dataset, True)}.csv...")
+                if dataset == "DATA":
+                    year_df = df[df["RECVDATE"].str.contains(year)]
+                else:
+                    data_df = get_data(year, "DATA", True)
+                    vaers_ids = data_df["VAERS_ID"].to_list()
+                    year_df = df[df["VAERS_ID"].isin(vaers_ids)].drop_duplicates(
+                        subset=["VAERS_ID"], keep="first"
+                    )
+                year_df.to_csv(
+                    f"./csv/{get_data_filename(year, dataset, True)}.csv",
+                    encoding="latin1",
+                    index=False,
+                )
 
     print("Reading datasets...")
-    # for dataset in datasets:
-    #     for year in years_to_analyze:
-    #         print(f"Loading {get_data_filename(year, dataset, True)}.csv...")
-    #         get_data(year, dataset, True)
-    #         print(f"Loading {get_data_filename(year, dataset, False)}.csv...")
-    #         get_data(year, dataset)
+    for dataset in datasets:
+        for year in years_to_analyze:
+            print(f"Loading {get_data_filename(year, dataset, True)}.csv...")
+            get_data(year, dataset, True)
+            print(f"Loading {get_data_filename(year, dataset, False)}.csv...")
+            get_data(year, dataset)
 
     print("Calculating analysis...")
     analysis = {}
@@ -54,7 +57,7 @@ def main(allyears):
                 analysis_keys[key]["analysis"],
                 *analysis_keys[key]["args"],
                 delete=True,
-                log=True
+                log=True,
             )
             year_analysis[key] = value
         analysis[year] = year_analysis
@@ -66,9 +69,10 @@ def main(allyears):
 
 if __name__ == "__main__":
     args = sys.argv[1:]
-    if len(args) == 0:
-        main(False)
-    elif args[0] == "-allyears":
-        main(True)
-    else:
-        print("Error, invalid command.")
+    all_years = False
+    read_data = True
+    if "-allyears" in args:
+        all_years = True
+    if "-skipdata" in args:
+        read_data = False
+    main(all_years, read_data)

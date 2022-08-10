@@ -5,3 +5,11 @@
 #__next {
   @apply flex flex-col min-h-screen;
 }
+
+.dynamic-point-emphasis {
+  @apply font-bold;
+}
+
+.dynamic-text-emphasis {
+  @apply font-bold text-blue-500;
+}

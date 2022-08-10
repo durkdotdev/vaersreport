@@ -50,14 +50,14 @@ def analyze_totals_monthly(year):
             d_df[
                 d_df["RECVDATE"]
                 .str[:2]
-                .eq(str(index) if index > 9 else f"0{str(index)}")
+                .eq(str(index + 1) if index + 1 > 9 else f"0{str(index + 1)}")
             ]
         )
         nd_total = len(
             nd_df[
                 nd_df["RECVDATE"]
                 .str[:2]
-                .eq(str(index) if index > 9 else f"0{str(index)}")
+                .eq(str(index + 1) if index + 1 > 9 else f"0{str(index + 1)}")
             ]
         )
         total = d_total + nd_total
