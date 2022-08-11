@@ -13,3 +13,15 @@
 .dynamic-text-emphasis {
   @apply font-bold text-blue-500;
 }
+
+.recharts-tooltip-label {
+  @apply font-bold;
+}
+
+.recharts-tooltip-item-list {
+  @apply mt-1 !important;
+}
+
+.recharts-tooltip-item {
+  @apply py-0.5 !important;
+}

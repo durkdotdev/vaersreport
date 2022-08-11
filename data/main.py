@@ -1,5 +1,6 @@
 import json
 from analysis import *
+from calculations import calculations
 from data import get_data, get_data_filename
 from redis_db import redis_search, test_redis
 from utils import *
@@ -7,7 +8,7 @@ import pandas as pd
 import sys
 
 
-def main(all_years=False, read_data=True):
+def main(all_years=False, read_data=True, no_delete=False):
     print("Checking for local redis...")
     test_redis()
 
@@ -37,30 +38,37 @@ def main(all_years=False, read_data=True):
                     index=False,
                 )
 
-    print("Reading datasets...")
-    for dataset in datasets:
-        for year in years_to_analyze:
-            print(f"Loading {get_data_filename(year, dataset, True)}.csv...")
-            get_data(year, dataset, True)
-            print(f"Loading {get_data_filename(year, dataset, False)}.csv...")
-            get_data(year, dataset)
+        print("Reading datasets...")
+        for dataset in datasets:
+            for year in years_to_analyze:
+                print(f"Loading {get_data_filename(year, dataset, True)}.csv...")
+                get_data(year, dataset, True)
+                print(f"Loading {get_data_filename(year, dataset, False)}.csv...")
+                get_data(year, dataset)
 
     print("Calculating analysis...")
+    if no_delete:
+        print("Not deleting redis... using saved analysis...")
     analysis = {}
     for year in years_to_analyze:
         year_analysis = {}
         analysis_keys = analysis_year_keys_and_analysis(year)
-        keys = analysis_keys.keys()
-        for key in keys:
+        for key in analysis_keys.keys():
             value = redis_search(
                 analysis_keys[key]["key"],
                 analysis_keys[key]["analysis"],
                 *analysis_keys[key]["args"],
-                delete=True,
+                delete=not no_delete,
                 log=True,
             )
             year_analysis[key] = value
         analysis[year] = year_analysis
+
+    print("Collecting analysis calculations...")
+    analysis_calculations = {}
+    for key in calculations.keys():
+        analysis_calculations[key] = calculations[key](analysis)
+    analysis = {**analysis_calculations, **analysis}
 
     print("Saving analysis to data.json")
     with open("data.json", "w") as file:
@@ -71,8 +79,11 @@ if __name__ == "__main__":
     args = sys.argv[1:]
     all_years = False
     read_data = True
+    no_delete = False
     if "-allyears" in args:
         all_years = True
     if "-skipdata" in args:
         read_data = False
-    main(all_years, read_data)
+    if "-nodelete" in args:
+        no_delete = True
+    main(all_years, read_data, no_delete)

@@ -6,7 +6,7 @@ import Divider from "./Divider";
 
 const ContributeBanner = () => {
   return (
-    <div className="mt-32 mb-16 flex w-full justify-center px-6">
+    <div className="my-16 flex w-full justify-center px-6 md:mt-20">
       <div className="flex w-full max-w-4xl flex-col items-center space-y-8 ">
         <Divider>Contribute</Divider>
         <Paragraph>

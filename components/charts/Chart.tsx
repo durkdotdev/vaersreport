@@ -15,6 +15,7 @@ import {
 import type { ChartType } from "../../lib/types";
 import ChartTitle from "../typography/ChartTitle";
 import Paragraph from "../typography/Paragraph";
+import TreemapCustomContent from "./utils/TreemapCustomContent";
 
 const componentTypes = {
   bar: Bar,
@@ -49,10 +50,15 @@ const Chart = ({ args = [], chart }: ChartProps) => {
       <div className="flex min-h-[12rem] w-full max-w-3xl justify-center sm:min-h-[16rem]">
         <ResponsiveContainer width="99.9%" {...chart.containerProps}>
           <ChartPropsType
+            content={
+              chart.props.type === "treemap" ? (
+                <TreemapCustomContent />
+              ) : undefined
+            }
             data={chart.data(args)}
             {...(chart.props as unknown as typeof chartTypes[keyof typeof chartTypes])}
           >
-            {chart.type !== "treemap" && (
+            {chart.props.type !== "treemap" && (
               <CartesianGrid strokeDasharray="2 2" />
             )}
             <XAxis

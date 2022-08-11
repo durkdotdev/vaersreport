@@ -1,16 +1,21 @@
 import data from "../../../data/data.json";
-import { getHighestYearlyReportsYear } from "../../calculations";
+import { sequentialColors } from "../../colors";
 import { dynamicTextSpanClose, dynamicTextSpanOpen } from "../../dynamicText";
 import { getYears, numberFormatter } from "../../helpers";
-import { ChartType } from "../../types";
+import { ChartType, DataYearType } from "../../types";
 
 const totalReportsChart: ChartType = {
   title: () => "VAERS Reports, Per Year",
-  description: () => {
-    const highestYear = getHighestYearlyReportsYear();
-    return `Adverse events have steadily increased since 1990. Reports for a single year peaked in ${dynamicTextSpanOpen}${highestYear.year}${dynamicTextSpanClose} with ${dynamicTextSpanOpen}${highestYear.total}${dynamicTextSpanClose} total reports.`;
-  },
-  data: () => getYears().map((year) => data[year as keyof typeof data].totals),
+  description: () =>
+    `Adverse events have steadily increased since 1990. Reports for a single year peaked in ${dynamicTextSpanOpen}${
+      data.highest_yearly_total.year
+    }${dynamicTextSpanClose} with ${dynamicTextSpanOpen}${numberFormatter(
+      data.highest_yearly_total.total
+    )}${dynamicTextSpanClose} total reports.`,
+  data: () =>
+    getYears().map(
+      (year) => (data[year as keyof typeof data] as DataYearType).totals
+    ),
   props: {
     type: "bar",
     xAxis: {
@@ -29,14 +34,14 @@ const totalReportsChart: ChartType = {
       {
         type: "bar",
         dataKey: "d_total",
-        // fill: color,
+        fill: sequentialColors[0],
         name: "Domestic",
         stackId: "total"
       },
       {
         type: "bar",
         dataKey: "nd_total",
-        // fill: color,
+        fill: sequentialColors[1],
         name: "Nondomestic",
         stackId: "total"
       }

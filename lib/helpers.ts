@@ -14,7 +14,7 @@ export const getTense = (year: string) => {
 };
 
 export const getYears = () => {
-  return Object.keys(data);
+  return Object.keys(data).filter((key) => parseInt(key) >= 1990);
 };
 
 export const numberFormatter = (value: number) => {

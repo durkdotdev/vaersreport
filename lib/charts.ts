@@ -1,14 +1,21 @@
-import { getTotalReports, getYearlyTotalReports } from "./calculations";
+import data from "../data/data.json";
+import totalOutcomesChart from "./charts/report/totalOutcomes";
 import totalReportsChart from "./charts/report/totalReportsChart";
-import yearMonthlyTotalReportsChart from "./charts/reportYear/monthlyTotalReportsChart";
+import totalVaccineTotalsChart from "./charts/report/totalVaccineTotalsChart";
+import yearlyOutcomesChart from "./charts/reportYear/yearlyOutcomesChart";
+import yearlyVaccineTotalsChart from "./charts/reportYear/yearlyVaccineTotalsChart";
+import yearMonthlyTotalReportsChart from "./charts/reportYear/yearMonthlyTotalReportsChart";
 import { dynamicPointSpanClose, dynamicPointSpanOpen } from "./dynamicText";
-import { getTense } from "./helpers";
+import { getTense, numberFormatter } from "./helpers";
+import { DataYearType } from "./types";
 
 const charts = {
   "/report": {
     title: () => `VAERS Report, 1990-${new Date().getFullYear()}`,
     points: () => [
-      `There have been ${dynamicPointSpanOpen}${getTotalReports()}${dynamicPointSpanClose} total reports submitted to VAERS.`
+      `There have been ${dynamicPointSpanOpen}${numberFormatter(
+        data.total_reports
+      )}${dynamicPointSpanClose} total reports submitted to VAERS.`
     ],
     sections: [
       {
@@ -17,20 +24,21 @@ const charts = {
       },
       {
         title: "Outcomes of Adverse Events",
-        charts: []
+        charts: [totalOutcomesChart]
       },
       {
         title: "Vaccine Analysis",
-        charts: []
+        charts: [totalVaccineTotalsChart]
       }
     ]
   },
   "/report/[year]": {
     title: ([year]: any[]) => `VAERS Report, ${year}`,
     points: ([year]: any[]) => [
-      `There ${getTense(year)} ${dynamicPointSpanOpen}${getYearlyTotalReports(
-        year
-      )}${dynamicPointSpanClose} total reports submitted to VAERS in ${year}.`
+      `There ${getTense(year)} ${dynamicPointSpanOpen}${numberFormatter(
+        (data[year as keyof typeof data] as DataYearType).totals.total
+      )}
+      ${dynamicPointSpanClose} total reports submitted to VAERS in ${year}.`
     ],
     sections: [
       {
@@ -39,11 +47,11 @@ const charts = {
       },
       {
         title: "Outcomes of Adverse Events",
-        charts: []
+        charts: [yearlyOutcomesChart]
       },
       {
         title: "Vaccine Analysis",
-        charts: []
+        charts: [yearlyVaccineTotalsChart]
       }
     ]
   }

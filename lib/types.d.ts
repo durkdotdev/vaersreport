@@ -1,3 +1,4 @@
+import data from "../data/data.json";
 import charts from "./charts";
 
 export type ChartType = {
@@ -10,6 +11,9 @@ export type ChartType = {
   };
   [index: string]: any;
 };
+
+const exampleYear = data[1990];
+export type DataYearType = typeof exampleYear;
 
 const exampleSection = charts["/report"].sections[0];
 export type SectionType = typeof exampleSection;

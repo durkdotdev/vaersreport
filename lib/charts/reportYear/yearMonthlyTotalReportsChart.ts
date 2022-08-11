@@ -1,31 +1,21 @@
 import data from "../../../data/data.json";
-import { getComparisonYearlyMonthlyReportsMonth } from "../../calculations";
+import { sequentialColors } from "../../colors";
 import { dynamicTextSpanClose, dynamicTextSpanOpen } from "../../dynamicText";
-import {
-  compareLessThan,
-  getInYear,
-  getTense,
-  numberFormatter
-} from "../../helpers";
-import { ChartType } from "../../types";
+import { getInYear, numberFormatter } from "../../helpers";
+import { ChartType, DataYearType } from "../../types";
 
 const yearMonthlyTotalReportsChart: ChartType = {
   title: ([year]: any[]) => `VAERS Reports, Per Month, ${year}`,
   description: ([year]: any[]) => {
-    const highestMonth = getComparisonYearlyMonthlyReportsMonth(year);
-    const lowestMonth = getComparisonYearlyMonthlyReportsMonth(
-      year,
-      compareLessThan
-    );
+    const highestMonthlyTotal = (
+      data[year as keyof typeof data] as DataYearType
+    ).totals_monthly.highest_monthly_total;
     return `${getInYear(year)}, reports peaked in ${dynamicTextSpanOpen}${
-      highestMonth.name
-    } (${highestMonth.total}) ${dynamicTextSpanClose} and ${getTense(
-      year
-    )} lowest in ${dynamicTextSpanOpen}${lowestMonth.name} (${
-      lowestMonth.total
-    })${dynamicTextSpanClose}.`;
+      highestMonthlyTotal.name
+    } (${numberFormatter(highestMonthlyTotal.total)})${dynamicTextSpanClose}.`;
   },
-  data: ([year]: any[]) => data[year as keyof typeof data].totals_monthly,
+  data: ([year]: any[]) =>
+    (data[year as keyof typeof data] as DataYearType).totals_monthly.totals,
   props: {
     type: "bar",
     xAxis: {
@@ -44,7 +34,7 @@ const yearMonthlyTotalReportsChart: ChartType = {
       {
         type: "bar",
         dataKey: "d_total",
-        // fill: colors,
+        fill: sequentialColors[0],
         maxBarSize: 30,
         name: "Domestic",
         stackId: "total"
@@ -52,7 +42,7 @@ const yearMonthlyTotalReportsChart: ChartType = {
       {
         type: "bar",
         dataKey: "nd_total",
-        // fill: color,
+        fill: sequentialColors[1],
         maxBarSize: 30,
         name: "Nondomestic",
         stackId: "total"

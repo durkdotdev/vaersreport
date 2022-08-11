@@ -44,6 +44,7 @@ def analyze_totals(year):
 def analyze_totals_monthly(year):
     d_df = get_data(year, "DATA")
     nd_df = get_data(year, "DATA", True)
+    highest_monthly_total = {"total": 0}
     totals = []
     for index, month in enumerate(months):
         d_total = len(
@@ -61,15 +62,16 @@ def analyze_totals_monthly(year):
             ]
         )
         total = d_total + nd_total
-        totals.append(
-            {
-                **month,
-                "d_total": d_total,
-                "nd_total": nd_total,
-                "total": total,
-            }
-        )
-    return totals
+        monthly_totals = {
+            **month,
+            "d_total": d_total,
+            "nd_total": nd_total,
+            "total": total,
+        }
+        if monthly_totals["total"] > highest_monthly_total["total"]:
+            highest_monthly_total = monthly_totals
+        totals.append(monthly_totals)
+    return {"highest_monthly_total": highest_monthly_total, "totals": totals}
 
 
 # Growths
@@ -95,7 +97,13 @@ def analyze_growth(year):
         total_growth = 100 * (
             (present_total["total"] - past_total["total"]) / past_total["total"]
         )
-    return {"d_growth": d_growth, "nd_growth": nd_growth, "total_growth": total_growth}
+    return {
+        "abbreviation": f"'{year[-2:]}",
+        "year": year,
+        "d_growth": d_growth,
+        "nd_growth": nd_growth,
+        "total_growth": total_growth,
+    }
 
 
 # Outcomes
@@ -105,13 +113,20 @@ def analyze_outcomes(year):
     d_deaths = len(d_df[d_df["DIED"].eq("Y")])
     nd_deaths = len(nd_df[nd_df["DIED"].eq("Y")])
     total_deaths = d_deaths + nd_deaths
-    d_injuries = len(d_df) - d_deaths
-    nd_injuries = len(nd_df) - nd_deaths
+    d_hospitilizations = len(d_df[d_df["HOSPITAL"].eq("Y")])
+    nd_hospitilizations = len(nd_df[nd_df["HOSPITAL"].eq("Y")])
+    total_hospitilizations = d_hospitilizations + nd_hospitilizations
+    d_injuries = len(d_df) - d_hospitilizations - d_deaths
+    nd_injuries = len(nd_df) - nd_hospitilizations - nd_deaths
     total_injuries = d_injuries + nd_injuries
     return {
+        "fatality_percentage": 100 * (total_deaths / (len(d_df) + len(nd_df))),
         "d_deaths": d_deaths,
         "nd_deaths": nd_deaths,
         "total_deaths": total_deaths,
+        "d_hospitilizations": d_hospitilizations,
+        "nd_hospitilizations": nd_hospitilizations,
+        "total_hospitilizations": total_hospitilizations,
         "d_injuries": d_injuries,
         "nd_injuries": nd_injuries,
         "total_injuries": total_injuries,
@@ -120,6 +135,7 @@ def analyze_outcomes(year):
 
 # Vaccines
 def analyze_vaccines(year):
+    highest_vaccine_total = {"total": 0}
     vaccines = []
     d_df = get_data(year, "VAX")
     nd_df = get_data(year, "VAX", True)
@@ -130,12 +146,18 @@ def analyze_vaccines(year):
         d_total = len(d_df[d_df["VAX_TYPE"].eq(vaccine)])
         nd_total = len(nd_df[nd_df["VAX_TYPE"].eq(vaccine)])
         total = d_total + nd_total
-        vaccines.append(
-            {
-                "vax_type": vaccine,
-                "d_total": d_total,
-                "nd_total": nd_total,
-                "total": total,
-            }
-        )
-    return vaccines
+        vaccine_totals = {
+            "name": vaccine,
+            "vax_type": vaccine,
+            "d_total": d_total,
+            "nd_total": nd_total,
+            "total": total,
+        }
+        vaccines.append(vaccine_totals)
+        if vaccine_totals["total"] > highest_vaccine_total["total"]:
+            highest_vaccine_total = vaccine_totals
+    return {
+        "vaccines_list": vaccines_list,
+        "highest_vaccine_total": highest_vaccine_total,
+        "totals": vaccines,
+    }
