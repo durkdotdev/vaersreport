@@ -96,9 +96,106 @@ def calculate_total_vaccines(analysis):
     }
 
 
+def calculate_total_sexes(analysis):
+    d_female = 0
+    nd_female = 0
+    total_female = 0
+    d_male = 0
+    nd_male = 0
+    total_male = 0
+    d_unknown = 0
+    nd_unknown = 0
+    total_unkown = 0
+    for year in years:
+        yearly_sexes = analysis[year]["sexes"]
+        d_female += yearly_sexes["d_female"]
+        nd_female += yearly_sexes["nd_female"]
+        total_female += yearly_sexes["total_female"]
+        d_male += yearly_sexes["d_male"]
+        nd_male += yearly_sexes["nd_male"]
+        total_male += yearly_sexes["total_male"]
+        d_unknown += yearly_sexes["d_unknown"]
+        nd_unknown += yearly_sexes["nd_unknown"]
+        total_unkown += yearly_sexes["total_unkown"]
+    return {
+        "d_female": d_female,
+        "nd_female": nd_female,
+        "total_female": total_female,
+        "d_male": d_male,
+        "nd_male": nd_male,
+        "total_male": total_male,
+        "d_unknown": d_unknown,
+        "nd_unknown": nd_unknown,
+        "total_unkown": total_unkown,
+    }
+
+
+def calculate_total_ages(analysis):
+    d_0_5 = 0
+    nd_0_5 = 0
+    total_0_5 = 0
+    d_6_14 = 0
+    nd_6_14 = 0
+    total_6_14 = 0
+    d_15_24 = 0
+    nd_15_24 = 0
+    total_15_24 = 0
+    d_25_64 = 0
+    nd_25_64 = 0
+    total_25_64 = 0
+    d_65_plus = 0
+    nd_65_plus = 0
+    total_65_plus = 0
+    d_unknown = 0
+    nd_unknown = 0
+    total_unknown = 0
+    for year in years:
+        yearly_ages = analysis[year]["ages"]
+        d_0_5 += yearly_ages["d_0_5"]
+        nd_0_5 += yearly_ages["nd_0_5"]
+        total_0_5 += yearly_ages["total_0_5"]
+        d_6_14 += yearly_ages["d_6_14"]
+        nd_6_14 += yearly_ages["nd_6_14"]
+        total_6_14 += yearly_ages["total_6_14"]
+        d_15_24 += yearly_ages["d_15_24"]
+        nd_15_24 += yearly_ages["nd_15_24"]
+        total_15_24 += yearly_ages["total_15_24"]
+        d_25_64 += yearly_ages["d_25_64"]
+        nd_25_64 += yearly_ages["nd_25_64"]
+        total_25_64 += yearly_ages["total_25_64"]
+        d_65_plus += yearly_ages["d_65_plus"]
+        nd_65_plus += yearly_ages["nd_65_plus"]
+        total_65_plus += yearly_ages["total_65_plus"]
+        d_unknown += yearly_ages["d_unknown"]
+        nd_unknown += yearly_ages["nd_unknown"]
+        total_unknown += yearly_ages["total_unknown"]
+    return {
+        "d_0_5": d_0_5,
+        "nd_0_5": nd_0_5,
+        "total_0_5": total_0_5,
+        "d_6_14": d_6_14,
+        "nd_6_14": nd_6_14,
+        "total_6_14": total_6_14,
+        "d_15_24": d_15_24,
+        "nd_15_24": nd_15_24,
+        "total_15_24": total_15_24,
+        "d_25_64": d_25_64,
+        "nd_25_64": nd_25_64,
+        "total_25_64": total_25_64,
+        "d_65_plus": d_65_plus,
+        "nd_65_plus": nd_65_plus,
+        "total_65_plus": total_65_plus,
+        "d_unknown": d_unknown,
+        "nd_unknown": nd_unknown,
+        "total_unknown": total_unknown,
+    }
+
+
 calculations = {
     "total_reports": calculate_total_reports,
     "highest_yearly_total": calculate_highest_yearly_total,
     "total_outcomes": calculate_total_outcomes,
     "total_vaccines": calculate_total_vaccines,
+    "total_sexes": calculate_total_sexes,
+    "total_ages": calculate_total_ages,
 }

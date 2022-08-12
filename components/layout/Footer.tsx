@@ -25,7 +25,7 @@ const footerGroups = [
     title: "Contribute",
     links: [
       {
-        href: "https://github.com/durkdotdev/vaers-report",
+        href: "https://github.com/durkdotdev/vaersreport",
         isExternal: true,
         label: "GitHub"
       },

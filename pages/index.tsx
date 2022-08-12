@@ -1,13 +1,16 @@
-import type { NextPage } from "next";
+import { NextPage } from "next";
 
+import ChartsWrapper from "../components/charts/ChartsWrapper";
 import Page from "../components/layout/Page";
 
-const Home: NextPage = () => {
+const HomePage: NextPage = () => {
   return (
     <>
-      <Page>Home Page</Page>
+      <Page>
+        <ChartsWrapper chartsKey="/report" />
+      </Page>
     </>
   );
 };
 
-export default Home;
+export default HomePage;

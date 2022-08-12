@@ -7,10 +7,7 @@ import { getYears } from "../../lib/helpers";
 import Dropdown from "../miscellaneous/Dropdown";
 import DropdownLink from "../miscellaneous/DropdownLink";
 
-const navLinks = [
-  { href: "/report", label: "Report" },
-  { href: "/about", label: "About" }
-];
+const navLinks = [{ href: "/project/about", label: "About" }];
 
 const Nav = () => {
   const router = useRouter();
@@ -47,7 +44,7 @@ const Nav = () => {
                     <Menu.Item key={value}>
                       {({ active }) => (
                         <DropdownLink
-                          href={`/report/${value}`}
+                          href={`/${value}`}
                           className={classNames(
                             index === 0
                               ? "rounded-t"

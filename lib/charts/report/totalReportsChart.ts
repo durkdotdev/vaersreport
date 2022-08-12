@@ -5,7 +5,7 @@ import { getYears, numberFormatter } from "../../helpers";
 import { ChartType, DataYearType } from "../../types";
 
 const totalReportsChart: ChartType = {
-  title: () => "VAERS Reports, Per Year",
+  title: () => "VAERS Reports, Yearly, Per Year",
   description: () =>
     `Adverse events have steadily increased since 1990. Reports for a single year peaked in ${dynamicTextSpanOpen}${
       data.highest_yearly_total.year

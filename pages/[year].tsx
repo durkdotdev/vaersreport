@@ -1,8 +1,8 @@
 import { GetStaticPaths, GetStaticProps } from "next";
 
-import ChartsWrapper from "../../components/charts/ChartsWrapper";
-import Page from "../../components/layout/Page";
-import { getYears } from "../../lib/helpers";
+import ChartsWrapper from "../components/charts/ChartsWrapper";
+import Page from "../components/layout/Page";
+import { getYears } from "../lib/helpers";
 
 interface YearPageProps {
   year: string;
@@ -21,7 +21,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   return { props: { year: params?.year } };
 };
 
-const ReportYear = ({ year }: YearPageProps) => {
+const YearPage = ({ year }: YearPageProps) => {
   return (
     <>
       <Page>
@@ -31,4 +31,4 @@ const ReportYear = ({ year }: YearPageProps) => {
   );
 };
 
-export default ReportYear;
+export default YearPage;

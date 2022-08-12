@@ -5,7 +5,7 @@ import { getInYear, numberFormatter } from "../../helpers";
 import { ChartType, DataYearType } from "../../types";
 
 const yearMonthlyTotalReportsChart: ChartType = {
-  title: ([year]: any[]) => `VAERS Reports, Per Month, ${year}`,
+  title: ([year]: any[]) => `VAERS Reports, Monthly, Per Month, ${year}`,
   description: ([year]: any[]) => {
     const highestMonthlyTotal = (
       data[year as keyof typeof data] as DataYearType

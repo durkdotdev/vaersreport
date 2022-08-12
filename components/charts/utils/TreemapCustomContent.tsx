@@ -21,7 +21,7 @@ class TreemapCustomContent extends PureComponent {
             fill:
               depth < 2
                 ? sequentialColors[
-                    Math.floor((index / root.children.length) * 4)
+                    Math.floor(1 + (index / root.children.length) * 4)
                   ]
                 : "none",
             stroke: "#fff",

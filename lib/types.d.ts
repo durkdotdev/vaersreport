@@ -4,6 +4,7 @@ import charts from "./charts";
 export type ChartType = {
   title: (args: any[]) => string;
   description: (args: any[]) => string;
+  subText?: (args: any[]) => string;
   data: (args: any[]) => any;
   props: {
     type: string;

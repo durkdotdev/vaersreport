@@ -15,6 +15,7 @@ import {
 import type { ChartType } from "../../lib/types";
 import ChartTitle from "../typography/ChartTitle";
 import Paragraph from "../typography/Paragraph";
+import SubText from "../typography/SubText";
 import TreemapCustomContent from "./utils/TreemapCustomContent";
 
 const componentTypes = {
@@ -93,6 +94,13 @@ const Chart = ({ args = [], chart }: ChartProps) => {
           </ChartPropsType>
         </ResponsiveContainer>
       </div>
+      {chart.subText && (
+        <SubText
+          dangerouslySetInnerHTML={{
+            __html: chart.subText(args)
+          }}
+        />
+      )}
     </div>
   );
 };

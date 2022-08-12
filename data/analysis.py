@@ -22,6 +22,12 @@ def analysis_year_keys_and_analysis(year):
             "args": [year],
             "key": f"{year}:vaccines",
         },
+        "sexes": {
+            "analysis": analyze_sexes,
+            "args": [year],
+            "key": f"{year}:sexes",
+        },
+        "ages": {"analysis": analyze_ages, "args": [year], "key": f"{year}:ages"},
     }
 
 
@@ -103,6 +109,73 @@ def analyze_growth(year):
         "d_growth": d_growth,
         "nd_growth": nd_growth,
         "total_growth": total_growth,
+    }
+
+
+def analyze_sexes(year):
+    d_df = get_data(year, "DATA")
+    nd_df = get_data(year, "DATA", True)
+    d_female = len(d_df[d_df["SEX"].eq("F")])
+    nd_female = len(nd_df[nd_df["SEX"].eq("F")])
+    total_female = d_female + nd_female
+    d_male = len(d_df[d_df["SEX"].eq("M")])
+    nd_male = len(nd_df[nd_df["SEX"].eq("M")])
+    total_male = d_male + nd_male
+    d_unknown = len(d_df) - d_female - d_male
+    nd_unknown = len(nd_df) - nd_female - nd_male
+    total_unkown = d_unknown + nd_unknown
+    return {
+        "d_female": d_female,
+        "nd_female": nd_female,
+        "total_female": total_female,
+        "d_male": d_male,
+        "nd_male": nd_male,
+        "total_male": total_male,
+        "d_unknown": d_unknown,
+        "nd_unknown": nd_unknown,
+        "total_unkown": total_unkown,
+    }
+
+
+def analyze_ages(year):
+    d_df = get_data(year, "DATA")
+    nd_df = get_data(year, "DATA", True)
+    d_0_5 = len(d_df[d_df["AGE_YRS"].lt(5) | d_df["CAGE_YR"].lt(5)])
+    nd_0_5 = len(nd_df[nd_df["AGE_YRS"].lt(5) | nd_df["CAGE_YR"].lt(5)])
+    d_0_5 = len(d_df[d_df["AGE_YRS"].lt(5) | d_df["CAGE_YR"].lt(5)])
+    nd_0_5 = len(nd_df[nd_df["AGE_YRS"].lt(5) | nd_df["CAGE_YR"].lt(5)])
+    total_0_5 = d_0_5 + nd_0_5
+    d_6_14 = len(d_df[d_df["AGE_YRS"].lt(15) | d_df["CAGE_YR"].lt(15)])
+    nd_6_14 = len(nd_df[nd_df["AGE_YRS"].lt(15) | nd_df["CAGE_YR"].lt(15)])
+    total_6_14 = d_6_14 + nd_6_14
+    d_15_24 = len(d_df[d_df["AGE_YRS"].lt(25) | d_df["CAGE_YR"].lt(25)])
+    nd_15_24 = len(nd_df[nd_df["AGE_YRS"].lt(25) | nd_df["CAGE_YR"].lt(25)])
+    total_15_24 = d_15_24 + nd_15_24
+    d_25_64 = len(d_df[d_df["AGE_YRS"].lt(65) | d_df["CAGE_YR"].lt(65)])
+    nd_25_64 = len(nd_df[nd_df["AGE_YRS"].lt(65) | nd_df["CAGE_YR"].lt(65)])
+    total_25_64 = d_25_64 + nd_25_64
+    d_unknown = len(d_df[d_df["AGE_YRS"].isna() & d_df["CAGE_YR"].isna()])
+    nd_unknown = len(nd_df[nd_df["AGE_YRS"].isna() & nd_df["CAGE_YR"].isna()])
+    total_unknown = d_unknown + nd_unknown
+    return {
+        "d_0_5": d_0_5,
+        "nd_0_5": nd_0_5,
+        "total_0_5": total_0_5,
+        "d_6_14": d_6_14 - d_0_5,
+        "nd_6_14": nd_6_14 - nd_0_5,
+        "total_6_14": total_6_14 - total_0_5,
+        "d_15_24": d_15_24 - d_6_14,
+        "nd_15_24": nd_15_24 - nd_6_14,
+        "total_15_24": total_15_24 - total_6_14,
+        "d_25_64": d_25_64 - d_15_24,
+        "nd_25_64": nd_25_64 - nd_15_24,
+        "total_25_64": total_25_64 - total_15_24,
+        "d_65_plus": len(d_df) - d_unknown - d_25_64,
+        "nd_65_plus": len(nd_df) - nd_unknown - nd_25_64,
+        "total_65_plus": len(d_df) + len(nd_df) - total_unknown - total_25_64,
+        "d_unknown": d_unknown,
+        "nd_unknown": nd_unknown,
+        "total_unknown": total_unknown,
     }
 
 
