@@ -10,7 +10,9 @@ export const getInYear = (year: string) => {
 };
 
 export const getTense = (year: string) => {
-  return year === new Date().getFullYear().toString() ? "have been" : "were";
+  return !year || year === new Date().getFullYear().toString()
+    ? "have been"
+    : "were";
 };
 
 export const getYears = () => {

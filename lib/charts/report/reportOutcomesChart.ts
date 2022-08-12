@@ -4,18 +4,26 @@ import { dynamicTextSpanClose, dynamicTextSpanOpen } from "../../dynamicText";
 import { getTense, numberFormatter } from "../../helpers";
 import { ChartType, DataYearType } from "../../types";
 
-const yearlyOutcomesChart: ChartType = {
-  title: ([year]: any[]) => `VAERS Outcomes, Injuries vs. Death, ${year}`,
-  description: ([year]: any[]) =>
-    `${dynamicTextSpanOpen}${numberFormatter(
-      100 -
-        (data[year as keyof typeof data] as DataYearType).outcomes
+const reportOutcomesChart: ChartType = {
+  title: ([year]: any[]) =>
+    year
+      ? `VAERS Outcomes, Injuries, Hospitilizations, and Deaths, ${year}`
+      : "VAERS Outcomes, Injuries, Hospitilizations, and Deaths, All Years",
+  description: ([year]: any[]) => {
+    const computedData = year
+      ? (data[year as keyof typeof data] as DataYearType).outcomes
           .fatality_percentage
+      : data.total_outcomes.fatality_percentage;
+    return `${dynamicTextSpanOpen}${numberFormatter(
+      100 - computedData
     )}%${dynamicTextSpanClose} of reports ${getTense(
       year
-    )} non-fatal injuries.`,
+    )} non-fatal injuries.`;
+  },
   data: ([year]: any[]) => [
-    (data[year as keyof typeof data] as DataYearType).outcomes
+    year
+      ? (data[year as keyof typeof data] as DataYearType).outcomes
+      : data.total_outcomes
   ],
   props: {
     type: "bar",
@@ -61,4 +69,4 @@ const yearlyOutcomesChart: ChartType = {
   }
 };
 
-export default yearlyOutcomesChart;
+export default reportOutcomesChart;

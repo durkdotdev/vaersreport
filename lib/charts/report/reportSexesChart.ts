@@ -9,29 +9,37 @@ import {
 import { getTense, numberFormatter } from "../../helpers";
 import { ChartType, DataYearType } from "../../types";
 
-const yearlySexesChart: ChartType = {
-  title: ([year]: any[]) => `VAERS Victims, Sexes, ${year}`,
+const reportSexChart: ChartType = {
+  title: ([year]: any[]) =>
+    year ? `VAERS Victims, Sexes, ${year}` : "VAERS Victims, Sexes, All Years",
   description: ([year]: any[]) => {
-    const yearlySexes = (data[year as keyof typeof data] as DataYearType).sexes;
+    const computedData = year
+      ? (data[year as keyof typeof data] as DataYearType).sexes
+      : data.total_sexes;
     const higherSex =
-      yearlySexes.total_female > yearlySexes.total_male
-        ? { number: yearlySexes.total_female, sex: "female" }
-        : { number: yearlySexes.total_male, sex: "male" };
+      computedData.total_female > computedData.total_male
+        ? { number: computedData.total_female, sex: "female" }
+        : { number: computedData.total_male, sex: "male" };
     return `${dynamicTextSpanOpen}${numberFormatter(
       100 *
-        (higherSex.number / (yearlySexes.total_female + yearlySexes.total_male))
-    )}%${dynamicTextSpanClose} of reports with a specified victim gender ${getTense(
+        (higherSex.number /
+          (computedData.total_female + computedData.total_male))
+    )}%${dynamicTextSpanClose} of report victims ${getTense(
       year
-    )} ${dynamicTextSpanOpen}${higherSex.sex}s${dynamicTextSpanClose}.`;
+    )} ${dynamicTextSpanOpen}${higherSex.sex}${dynamicTextSpanClose}.`;
   },
   subText: ([year]: any[]) => {
-    const yearlySexes = (data[year as keyof typeof data] as DataYearType).sexes;
+    const computedData = year
+      ? (data[year as keyof typeof data] as DataYearType).sexes
+      : data.total_sexes;
     return `*Note: For ${dynamicPointSpanOpen}${numberFormatter(
-      yearlySexes.total_unkown
+      computedData.total_unkown
     )}${dynamicPointSpanClose} reports the gender of the victim was unkown.`;
   },
   data: ([year]: any[]) => [
-    (data[year as keyof typeof data] as DataYearType).sexes
+    year
+      ? (data[year as keyof typeof data] as DataYearType).sexes
+      : data.total_sexes
   ],
   props: {
     type: "bar",
@@ -70,4 +78,4 @@ const yearlySexesChart: ChartType = {
   }
 };
 
-export default yearlySexesChart;
+export default reportSexChart;

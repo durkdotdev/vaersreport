@@ -12,40 +12,51 @@ import { ChartType, DataYearType } from "../../types";
 const broadAgeGroups = {
   total_0_5: "0-5 years",
   total_6_14: "6-14 years",
-  "total_15-24": "15-24 years",
+  total_15_24: "15-24 years",
   total_25_64: "25-64 years",
   total_65_plus: "65+ years"
 };
 
-const yearlyAgesChart: ChartType = {
-  title: ([year]: any[]) => `VAERS Victims, Ages, ${year}`,
+const reportAgesChart: ChartType = {
+  title: ([year]: any[]) =>
+    year ? `VAERS Victims, Ages, ${year}` : "VAERS Victims, Ages, All Years",
   description: ([year]: any[]) => {
-    const yearlySexes = (data[year as keyof typeof data] as DataYearType).ages;
-    const highestAge = Object.keys(yearlySexes).reduce((a, b) =>
-      yearlySexes[a as keyof typeof yearlySexes] >
-        yearlySexes[b as keyof typeof yearlySexes] && !a.includes("unknown")
+    const computedData = year
+      ? (data[year as keyof typeof data] as DataYearType).ages
+      : data.total_ages;
+    const highestAge = Object.keys(computedData).reduce((a, b) => {
+      if (a.includes("unknown")) return b;
+      if (b.includes("unknown")) return a;
+      return computedData[a as keyof typeof computedData] >
+        computedData[b as keyof typeof computedData]
         ? a
-        : b
-    );
-    return `The broad age group of ${dynamicTextSpanOpen}${
+        : b;
+    });
+    return `Victims aged ${dynamicTextSpanOpen}${
       broadAgeGroups[highestAge as keyof typeof broadAgeGroups]
-    } (${numberFormatter(
+    }${dynamicTextSpanClose}${
+      getTense(year).includes("have") ? " have" : ""
+    } experienced ${dynamicTextSpanOpen}${numberFormatter(
       100 *
-        (yearlySexes[highestAge as keyof typeof yearlySexes] /
-          ((data[year as keyof typeof data] as DataYearType).totals.total -
-            yearlySexes.total_unknown))
-    )}%)${dynamicTextSpanClose}${
-      getTense(year).includes("have") ? " has" : ""
-    } experienced the most adverse events.`;
+        (computedData[highestAge as keyof typeof computedData] /
+          (year
+            ? (data[year as keyof typeof data] as DataYearType).totals.total -
+              computedData.total_unknown
+            : data.total_reports - computedData.total_unknown))
+    )}%${dynamicTextSpanClose} of adverse events.`;
   },
   subText: ([year]: any[]) => {
-    const yearlySexes = (data[year as keyof typeof data] as DataYearType).ages;
+    const computedData = year
+      ? (data[year as keyof typeof data] as DataYearType).ages
+      : data.total_ages;
     return `*Note: For ${dynamicPointSpanOpen}${numberFormatter(
-      yearlySexes.total_unknown
+      computedData.total_unknown
     )}${dynamicPointSpanClose} reports the age of the victim was unkown.`;
   },
   data: ([year]: any[]) => [
-    (data[year as keyof typeof data] as DataYearType).ages
+    year
+      ? (data[year as keyof typeof data] as DataYearType).ages
+      : data.total_ages
   ],
   props: {
     type: "bar",
@@ -97,4 +108,4 @@ const yearlyAgesChart: ChartType = {
   }
 };
 
-export default yearlyAgesChart;
+export default reportAgesChart;

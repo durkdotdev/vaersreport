@@ -16,5 +16,5 @@ export type ChartType = {
 const exampleYear = data[1990];
 export type DataYearType = typeof exampleYear;
 
-const exampleSection = charts["/report"].sections[0];
+const exampleSection = charts["report"].sections[0];
 export type SectionType = typeof exampleSection;

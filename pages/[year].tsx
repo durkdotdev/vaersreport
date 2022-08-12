@@ -25,7 +25,7 @@ const YearPage = ({ year }: YearPageProps) => {
   return (
     <>
       <Page>
-        <ChartsWrapper args={[year]} chartsKey="/report/[year]" />
+        <ChartsWrapper args={[year]} chartsKey="report" />
       </Page>
     </>
   );

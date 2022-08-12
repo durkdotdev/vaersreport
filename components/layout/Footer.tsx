@@ -1,6 +1,8 @@
 import { ChevronUpIcon } from "@heroicons/react/solid";
 import Link from "next/link";
 
+import SubText from "../typography/SubText";
+
 const footerGroups = [
   {
     title: "Project",
@@ -39,11 +41,13 @@ const Footer = () => {
     <footer className="flex justify-center px-6 py-12">
       <div className="flex w-full max-w-xl flex-col space-y-6">
         <button
-          className="group -ml-1 flex w-[fit-content] items-center space-x-2 p-1 text-gray-500"
+          className="group -ml-1 flex w-[fit-content] items-center space-x-2 p-1"
           onClick={() => window.scrollTo({ behavior: "smooth", top: 0 })}
         >
           <ChevronUpIcon className="h-4 w-4" />
-          <span className="text-xs group-hover:underline">Back to Top</span>
+          <SubText className="!text-xs group-hover:underline">
+            Back to Top
+          </SubText>
         </button>
         <div className="flex flex-col justify-between space-y-8 sm:flex-row sm:space-y-0">
           {footerGroups.map((group) => (

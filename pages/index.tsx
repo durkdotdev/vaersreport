@@ -7,7 +7,7 @@ const HomePage: NextPage = () => {
   return (
     <>
       <Page>
-        <ChartsWrapper chartsKey="/report" />
+        <ChartsWrapper chartsKey="report" />
       </Page>
     </>
   );
