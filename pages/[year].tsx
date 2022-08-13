@@ -2,6 +2,7 @@ import { GetStaticPaths, GetStaticProps } from "next";
 
 import ChartsWrapper from "../components/charts/ChartsWrapper";
 import Page from "../components/layout/Page";
+import SEO from "../components/miscellaneous/SEO";
 import { getYears } from "../lib/helpers";
 
 interface YearPageProps {
@@ -24,6 +25,10 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 const YearPage = ({ year }: YearPageProps) => {
   return (
     <>
+      <SEO
+        title={`VAERS Report, ${year}`}
+        description={`Analysis and interactive charts covering VAERS reports for ${year}.`}
+      />
       <Page>
         <ChartsWrapper args={[year]} chartsKey="report" />
       </Page>

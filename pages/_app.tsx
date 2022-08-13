@@ -4,6 +4,7 @@ import type { AppProps } from "next/app";
 
 import Footer from "../components/layout/Footer";
 import Nav from "../components/layout/Nav";
+import AcknowledgementBanner from "../components/miscellaneous/AcknowledgementBanner";
 import ContributeBanner from "../components/miscellaneous/ContributeBanner";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
@@ -13,6 +14,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       <Component {...pageProps} />
       <ContributeBanner />
       <Footer />
+      <AcknowledgementBanner />
     </>
   );
 };

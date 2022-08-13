@@ -1,4 +1,5 @@
 import { Menu } from "@headlessui/react";
+import { MenuIcon } from "@heroicons/react/solid";
 import classNames from "classnames";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -8,6 +9,12 @@ import Dropdown from "../miscellaneous/Dropdown";
 import DropdownLink from "../miscellaneous/DropdownLink";
 
 const navLinks = [{ href: "/project/about", label: "About" }];
+const menuLinks = [
+  { href: "/project/about", label: "About" },
+  { href: "/project/contact", label: "Contact" },
+  { href: "/project/faq", label: "FAQ" },
+  { href: "/education/resources", label: "Resources" }
+];
 
 const Nav = () => {
   const router = useRouter();
@@ -31,11 +38,22 @@ const Nav = () => {
             </li>
           ))}
         </ul>
-        <ul className="flex items-center space-x-6">
+        <ul className="flex items-center	 space-x-3 md:flex-row-reverse md:space-x-6">
           <li>
             <Dropdown
               buttonClassName={year ? "!font-extrabold !text-black" : ""}
-              label={year ? (year as string) : "Select a Year"}
+              label={
+                year ? (
+                  <span>{year as string}</span>
+                ) : (
+                  <span>
+                    <span className="mr-[0.1875rem] hidden md:inline-block">
+                      Select a
+                    </span>
+                    Year
+                  </span>
+                )
+              }
             >
               <ul className="flex max-h-[16rem] flex-col overflow-y-auto">
                 {getYears()
@@ -64,6 +82,41 @@ const Nav = () => {
                       )}
                     </Menu.Item>
                   ))}
+              </ul>
+            </Dropdown>
+          </li>
+          <li>
+            <Dropdown
+              buttonClassName="!p-1 !border-none !shadow-none !bg-white h-[1.875rem]"
+              className="md:hidden"
+              label={<MenuIcon className="h-5 w-5 !text-black" />}
+              showIcon={false}
+            >
+              <ul className="flex max-h-[16rem] flex-col overflow-y-auto">
+                {menuLinks.map((link, index: number) => (
+                  <Menu.Item key={link.label}>
+                    {({ active }) => (
+                      <DropdownLink
+                        href={link.href}
+                        className={classNames(
+                          index === 0
+                            ? "rounded-t"
+                            : index === getYears().length - 1
+                            ? "rounded-b"
+                            : "rounded-none",
+                          router.pathname === link.href
+                            ? "bg-blue-500 text-white font-bold"
+                            : active
+                            ? "bg-gray-50"
+                            : "text-gray-700",
+                          "block px-4 py-2.5"
+                        )}
+                      >
+                        {link.label}
+                      </DropdownLink>
+                    )}
+                  </Menu.Item>
+                ))}
               </ul>
             </Dropdown>
           </li>
